@@ -2,7 +2,7 @@ organization := "com.traackr"
 
 name := "scalastic"
  
-version := "0.0.6"
+version := "0.0.6-HACKED"
 
 crossScalaVersions := Seq("2.9.1", "2.9.2")
  
@@ -32,3 +32,11 @@ publishArtifact in Compile := true
 parallelExecution in Test := false
 
 resolvers += "sonatype releases" at "http://oss.sonatype.org/content/repositories/releases"
+
+publishTo := Some(
+  Resolver.sftp(
+    "Iliaz Scala stuff",
+    "scala.iliaz.com",
+    "/home/scala.iliaz.com"
+  ) as ("scala_iliaz_com", Path.userHome / ".ssh" / "id_rsa")
+)
