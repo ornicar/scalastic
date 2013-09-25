@@ -1074,7 +1074,7 @@ class SimpleFacetsTests extends IndexerBasedTest {
       response = indexer.search(facets = Seq(queryFacet("query").query(termQuery("num", 1)).global(true)))
       facet = response.getFacets.facet("query")
       facet.getCount should be === (2)
-      response = indexer.search(facets=Seq(queryFacet("query").query(termsQuery("num", Array(1, 2):_*)).facetFilter(termFilter("num", 1)).global(true)))
+      response = indexer.search(facets=Seq(queryFacet("query").query(termsQuery("num", Array(1d, 2d):_*)).facetFilter(termFilter("num", 1)).global(true)))
       facet = response.getFacets.facet("query")
       facet.getCount should be === (2)
     }
