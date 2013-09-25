@@ -171,9 +171,8 @@ trait Optimize {
     maxNumSegments: Option[Int] = None,
     onlyExpungeDeletes: Option[Boolean] = None,
     operationThreading: Option[BroadcastOperationThreading] = None,
-    refresh: Option[Boolean] = None, 
     waitForMerge: Option[Boolean] = None) =
-    optimize_send(indices, flush, listenerThreaded, maxNumSegments, onlyExpungeDeletes, operationThreading, refresh, waitForMerge).actionGet
+    optimize_send(indices, flush, listenerThreaded, maxNumSegments, onlyExpungeDeletes, operationThreading, waitForMerge).actionGet
 
   def optimize_send(
     indices: Iterable[String] = Nil,
@@ -182,9 +181,8 @@ trait Optimize {
     maxNumSegments: Option[Int] = None,
     onlyExpungeDeletes: Option[Boolean] = None,
     operationThreading: Option[BroadcastOperationThreading] = None,
-    refresh: Option[Boolean] = None, 
     waitForMerge: Option[Boolean] = None) =
-    optimize_prepare(indices, flush, listenerThreaded, maxNumSegments, onlyExpungeDeletes, operationThreading, refresh, waitForMerge).execute
+    optimize_prepare(indices, flush, listenerThreaded, maxNumSegments, onlyExpungeDeletes, operationThreading, waitForMerge).execute
 
   def optimize_prepare(
     indices: Iterable[String] = Nil,
@@ -193,7 +191,6 @@ trait Optimize {
     maxNumSegments: Option[Int] = None,
     onlyExpungeDeletes: Option[Boolean] = None,
     operationThreading: Option[BroadcastOperationThreading] = None,
-    refresh: Option[Boolean] = None, 
     waitForMerge: Option[Boolean] = None) = {
 		  /* method body */
     val request = client.admin.indices.prepareOptimize(indices.toArray: _*)
@@ -202,7 +199,6 @@ trait Optimize {
     maxNumSegments foreach { request.setMaxNumSegments(_) }
     onlyExpungeDeletes foreach { request.setOnlyExpungeDeletes(_) }
     operationThreading foreach { request.setOperationThreading(_) }
-    refresh foreach { request.setRefresh(_) }
     waitForMerge foreach { request.setWaitForMerge(_) }
     request
   }
@@ -213,22 +209,18 @@ trait Flush {
     
   def flush(
     indices: Iterable[String] = Nil,
-    full: Option[Boolean] = None,
-    refresh: Option[Boolean] = None) = flush_send(indices, full, refresh).actionGet
+    full: Option[Boolean] = None) = flush_send(indices, full).actionGet
     
   def flush_send(
     indices: Iterable[String] = Nil,
-    full: Option[Boolean] = None,
-    refresh: Option[Boolean] = None) = flush_prepare(indices, full, refresh).execute
+    full: Option[Boolean] = None) = flush_prepare(indices, full).execute
     
   def flush_prepare(
     indices: Iterable[String] = Nil,
-    full: Option[Boolean] = None,
-    refresh: Option[Boolean] = None) = {
+    full: Option[Boolean] = None) = {
 		  /* method body */
     val request = client.admin.indices.prepareFlush(indices.toArray: _*)
     full foreach { request.setFull(_) }
-    refresh foreach { request.setRefresh(_) }
     request
   }
 }
@@ -240,24 +232,24 @@ trait Refresh {
     indices: Iterable[String] = Nil,
     listenerThreaded: Option[Boolean] = None,
     operationThreading: Option[BroadcastOperationThreading] = None,
-    waitForOperations: Option[Boolean] = None) = refresh_send(indices, listenerThreaded, operationThreading, waitForOperations).actionGet
+    force: Option[Boolean] = None) = refresh_send(indices, listenerThreaded, operationThreading, force).actionGet
     
   def refresh_send(
     indices: Iterable[String] = Nil,
     listenerThreaded: Option[Boolean] = None,
     operationThreading: Option[BroadcastOperationThreading] = None,
-    waitForOperations: Option[Boolean] = None) = refresh_prepare(indices, listenerThreaded, operationThreading, waitForOperations).execute
+    force: Option[Boolean] = None) = refresh_prepare(indices, listenerThreaded, operationThreading, force).execute
     
   def refresh_prepare(
     indices: Iterable[String] = Nil,
     listenerThreaded: Option[Boolean] = None,
     operationThreading: Option[BroadcastOperationThreading] = None,
-    waitForOperations: Option[Boolean] = None) = {
+    force: Option[Boolean] = None) = {
 		  /* method body */
     val request = client.admin.indices.prepareRefresh(indices.toArray: _*)
     listenerThreaded foreach { request.setListenerThreaded(_) }
     operationThreading foreach { request.setOperationThreading(_) }
-    waitForOperations foreach { request.setWaitForOperations(_) }
+    force foreach { request.setForce(_) }
     request
   }
 }
