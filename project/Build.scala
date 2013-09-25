@@ -8,14 +8,14 @@ object Build extends Build {
   val basicSettings = Seq(
     organization := "org.scalastic",
     name := "scalastic",
-    version := "0.90.2",
+    version := "0.90.5-THIB",
     description := "a scala driver for elasticsearch",
     homepage := Some(url("https://github.com/bsadeh/scalastic")),
     licenses := Seq("The Apache Software License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
   )
 
   val scalaSettings = Seq(
-    scalaVersion := "2.10.2",
+    scalaVersion := "2.11.0-M4",
     scalacOptions ++= Seq("-unchecked", "-feature", "-deprecation")
   )
 
@@ -23,14 +23,10 @@ object Build extends Build {
     publishMavenStyle := true,
     publishArtifact in Compile := true,
     publishArtifact in Test := false,
-
-    publishTo <<= version { (v: String) =>
-      val nexus = "https://oss.sonatype.org/"
-      if (v.trim.endsWith("SNAPSHOT"))
-        Some("snapshots" at nexus + "content/repositories/snapshots")
-      else
-        Some("releases" at nexus + "service/local/staging/deploy/maven2")
-    },
+    publishTo := Some(Resolver.sftp(
+      "iliaz",
+      "scala.iliaz.com"
+    ) as ("scala_iliaz_com", Path.userHome / ".ssh" / "id_rsa")),
 
     pomIncludeRepository := { _ => false },
 
@@ -66,13 +62,13 @@ object Build extends Build {
     resolvers += Resolver.sonatypeRepo("releases"),
 
     libraryDependencies ++= Seq(
-      "org.elasticsearch" % "elasticsearch" % "0.90.2",
+      "org.elasticsearch" % "elasticsearch" % "0.90.5",
 
-      "org.clapper" %% "grizzled-slf4j" % "1.0.1",
+      "org.clapper" % "grizzled-slf4j_2.10" % "1.0.1",
 
       "junit" % "junit" % "4.10" % "test",
-      "org.scalatest" %% "scalatest" % "1.9.1" % "test",
-      "ch.qos.logback" % "logback-classic" % "1.0.2" % "test"
+      "org.scalatest" % "scalatest_2.10" % "1.9.2" % "test",
+      "ch.qos.logback" % "logback-classic" % "1.0.13" % "test"
     ),
 
     parallelExecution in Test := false
